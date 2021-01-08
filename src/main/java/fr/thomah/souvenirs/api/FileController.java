@@ -1,23 +1,21 @@
 package fr.thomah.souvenirs.api;
 
-import org.apache.logging.log4j.util.Strings;
+import fr.thomah.souvenirs.api.exception.BadRequestException;
+import fr.thomah.souvenirs.api.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class FileController {
@@ -30,28 +28,46 @@ public class FileController {
     @Value("${fr.thomah.souvenirs.api.storage}")
     private String storageFolder;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"offset", "limit"})
-    public Page<FileEntity> getPaginated(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
+    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"offset", "limit"})
+    public List<FileEntity> list(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
 
         // Verify that params are correct
         if(offset < 0 || limit <= 0) {
-            LOGGER.error("Cannot get paginated entities : offset or limit is incorrect");
+            LOGGER.error("Cannot get entities : offset or limit is incorrect");
             throw new BadRequestException();
         }
 
         // Get and transform contents
-        Pageable pageable = PageRequest.of(offset, limit, Sort.by("createdAt").descending());
-        return fileRepository.findAll(pageable);
+        return fileRepository.findAll();
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @RequestMapping(value = "/img/{id}.{extension}", method = RequestMethod.GET, produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public @ResponseBody byte[] getImage(@PathVariable("id") String id, @PathVariable("extension") String extension) throws IOException {
+
+        // Verify that params are correct
+        if(id == null || id.isEmpty() || extension == null || extension.isEmpty()) {
+            LOGGER.error("Cannot get image : id or extension is incorrect");
+            throw new BadRequestException();
+        }
+
+        Optional<FileEntity> optionalFile = fileRepository.findById(id);
+        if(optionalFile.isPresent()) {
+            FileEntity file = optionalFile.get();
+            String fullPath = storageFolder + File.separator + file.getDirectory() + File.separator + file.getId() + "." + file.getExtension();
+            return Files.readAllBytes(Paths.get(fullPath));
+        } else {
+            throw new NotFoundException();
+        }
+    }
+
+    @RequestMapping(value = "/files", method = RequestMethod.POST)
     public void upload(@RequestParam("file") MultipartFile multipartFile) {
         if (multipartFile == null) {
             throw new RuntimeException("You must select the a file for uploading");
         }
 
         String finalFileName = multipartFile.getOriginalFilename();
-        String fullPath = Strings.EMPTY;
+        String fullPath;
         try {
             InputStream inputStream = multipartFile.getInputStream();
             LOGGER.debug("inputStream: " + inputStream);
@@ -88,6 +104,12 @@ public class FileController {
             LOGGER.error("Cannot save file {}", finalFileName, e);
         }
 
+    }
+
+    @RequestMapping(value = "/files/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") String id) {
+        Optional<FileEntity> optionalFile = fileRepository.findById(id);
+        optionalFile.ifPresent(fileEntity -> fileRepository.delete(fileEntity));
     }
 
     private boolean isValidExtension(String extension) {

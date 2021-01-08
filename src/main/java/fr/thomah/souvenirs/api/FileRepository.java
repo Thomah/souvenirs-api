@@ -2,6 +2,8 @@ package fr.thomah.souvenirs.api;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FileRepository extends JpaRepository<FileEntity, Long> {
+import java.util.Optional;
 
+public interface FileRepository extends JpaRepository<FileEntity, Long> {
+    Optional<FileEntity> findById(String id);
 }
