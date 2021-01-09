@@ -28,16 +28,8 @@ public class FileController {
     @Value("${fr.thomah.souvenirs.api.storage}")
     private String storageFolder;
 
-    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, params = {"offset", "limit"})
-    public List<FileEntity> list(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
-
-        // Verify that params are correct
-        if(offset < 0 || limit <= 0) {
-            LOGGER.error("Cannot get entities : offset or limit is incorrect");
-            throw new BadRequestException();
-        }
-
-        // Get and transform contents
+    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<FileEntity> list() {
         return fileRepository.findAll();
     }
 

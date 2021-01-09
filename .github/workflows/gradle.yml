@@ -1,0 +1,34 @@
+name: Java CI with Gradle
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: App Build with Gradle
+        run: ./gradlew build
+      - name: Docker Build with Gradle
+        run: ./gradlew bootBuildImage --imageName=thomah/souvenirs-api
+      - name: Login to DockerHub
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Push to DockerHub
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: thomah/souvenirs-api:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}

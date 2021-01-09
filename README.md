@@ -1,5 +1,18 @@
 # Souvenirs - API
 
+## Database
+
+By default, the app starts with an embedded H2 database you can access the console at the following URL : http://localhost:8080/h2-console
+
+You can use an external PostgreSQL database by overriding environment variables :
+
+```bash
+SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+SPRING_DATASOURCE_URL=jdbc:postgresql://<YOUR_DB_HOST>:<YOUR_DB_PORT>/<YOUR_DB_NAME>
+SPRING_DATASOURCE_USERNAME=<YOUR_DB_USERNAME>
+SPRING_DATASOURCE_PASSWORD=<YOUR_DB_PASSWORD>
+```
+
 ## Build
 
 The app only :
@@ -18,20 +31,19 @@ The app + Docker image :
 
 ### Run with Gradle
 
-**Prerequisite :** A PostgreSQL database must be installed and match configuration in `src/main/resources/application.properties`
-
 ```bash
 ./gradlew bootRun
 ```
 
 ### Run with Docker
 
-**Prerequisite :** Make sure you have an **external** PostgreSQL database for this one :
-
 ```bash
 docker run -d --name souvenirs-api \
+  -p 8080:8080 \
+  -e SPRING_DATASOURCE_DRIVER=org.postgresql.Driver \
   -e SPRING_DATASOURCE_URL=<YOUR_DB_JDBC_URL> \
   -e SPRING_DATASOURCE_USERNAME=<YOUR_DB_USERNAME> \
-  -e SPRING_DATASOURCE_PASSWORD=<YOUR_DB_PASSWORD> `
+  -e SPRING_DATASOURCE_PASSWORD=<YOUR_DB_PASSWORD> \
+  -v <YOUR_HOST_DIRECTORY>:/files \
   thomah/souvenirs-api:latest
 ```
