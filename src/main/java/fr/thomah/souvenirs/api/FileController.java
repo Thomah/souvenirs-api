@@ -28,6 +28,9 @@ public class FileController {
     @Value("${fr.thomah.souvenirs.api.storage}")
     private String storageFolder;
 
+    @RequestMapping(value = "/health", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void health() {}
+
     @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<FileEntity> list() {
         return fileRepository.findAll();
@@ -101,7 +104,12 @@ public class FileController {
     @RequestMapping(value = "/files/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") String id) {
         Optional<FileEntity> optionalFile = fileRepository.findById(id);
-        optionalFile.ifPresent(fileEntity -> fileRepository.delete(fileEntity));
+        optionalFile.ifPresent(fileEntity -> {
+            File file = new File(storageFolder + File.separator + fileEntity.getDirectory() + File.separator + fileEntity.getId() + "." + fileEntity.getExtension());
+            if(file.delete()) {
+                fileRepository.delete(fileEntity);
+            }
+        });
     }
 
     private boolean isValidExtension(String extension) {
