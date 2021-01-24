@@ -47,3 +47,20 @@ docker run -d --name souvenirs-api \
   -v <YOUR_HOST_DIRECTORY>:/workspace/files \
   thomah/souvenirs-api:<tag>
 ```
+
+### Check if the app is running
+
+```bash
+curl --head --location 'http://localhost:8080/health'
+```
+
+Result should be like :
+
+```bash
+HTTP/1.1 200
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Length: 0
+Date: Sun, 24 Jan 2021 16:48:27 GMT
+```
