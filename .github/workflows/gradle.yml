@@ -26,5 +26,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Docker Tag
         run: docker tag thomah/souvenirs-api:latest thomah/souvenirs-api:${GITHUB_REF##*/}
-      - name: Push to DockerHub
+      - name: Push ref to DockerHub
         run: docker push thomah/souvenirs-api:${GITHUB_REF##*/}
+      - name: Push latest to DockerHub
+        run: docker push thomah/souvenirs-api:latest
