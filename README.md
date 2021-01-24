@@ -44,6 +44,6 @@ docker run -d --name souvenirs-api \
   -e SPRING_DATASOURCE_URL=<YOUR_DB_JDBC_URL> \
   -e SPRING_DATASOURCE_USERNAME=<YOUR_DB_USERNAME> \
   -e SPRING_DATASOURCE_PASSWORD=<YOUR_DB_PASSWORD> \
-  -v <YOUR_HOST_DIRECTORY>:/files \
+  -v <YOUR_HOST_DIRECTORY>:/workspace/files \
   thomah/souvenirs-api:<tag>
 ```
