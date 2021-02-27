@@ -1,7 +1,6 @@
 package fr.thomah.souvenirs.api;
 
 import fr.thomah.souvenirs.api.exception.BadRequestException;
-import fr.thomah.souvenirs.api.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,25 +31,6 @@ public class FileController {
     @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<FileEntity> list() {
         return fileRepository.findAll();
-    }
-
-    @RequestMapping(value = "/img/{id}.{extension}", method = RequestMethod.GET, produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public @ResponseBody byte[] getImage(@PathVariable("id") String id, @PathVariable("extension") String extension) throws IOException {
-
-        // Verify that params are correct
-        if(id == null || id.isEmpty() || extension == null || extension.isEmpty()) {
-            LOGGER.error("Cannot get image : id or extension is incorrect");
-            throw new BadRequestException();
-        }
-
-        Optional<FileEntity> optionalFile = fileRepository.findById(id);
-        if(optionalFile.isPresent()) {
-            FileEntity file = optionalFile.get();
-            String fullPath = storageFolder + File.separator + file.getDirectory() + File.separator + file.getId() + "." + file.getExtension();
-            return Files.readAllBytes(Paths.get(fullPath));
-        } else {
-            throw new NotFoundException();
-        }
     }
 
     @RequestMapping(value = "/files", method = RequestMethod.POST)
