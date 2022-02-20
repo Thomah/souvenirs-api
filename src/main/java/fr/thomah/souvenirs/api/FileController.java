@@ -3,7 +3,6 @@ package fr.thomah.souvenirs.api;
 import fr.thomah.souvenirs.api.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +17,6 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
-
-    @Value("${fr.thomah.souvenirs.api.storage}")
-    private String storageFolder;
 
     @RequestMapping(value = "/files/**", method = RequestMethod.GET, produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public @ResponseBody byte[] getImage(HttpServletRequest request) throws IOException {

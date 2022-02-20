@@ -51,16 +51,11 @@ docker run -d --name souvenirs-api \
 ### Check if the app is running
 
 ```bash
-curl --head --location 'http://localhost:8080/health'
+curl --location --request GET 'http://localhost:8080/actuator/health''
 ```
 
 Result should be like :
 
 ```bash
-HTTP/1.1 200
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Length: 0
-Date: Sun, 24 Jan 2021 16:48:27 GMT
+{"status":"UP"}
 ```
