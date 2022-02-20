@@ -12,7 +12,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 15
+          java-version: 17
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: App Build with Gradle

@@ -27,12 +27,19 @@ public class FileEntity {
     private Date createdAt = new Date();
 
     @NotNull
-    private String directory = "";
+    protected String name = "";
 
     @NotNull
-    private String originalName = "";
+    protected String directory = "";
 
     @NotNull
-    private String extension = "";
+    protected String format = "";
+
+    @NotNull
+    protected String url = "";
+
+    public String getFullname() {
+        return name + "." + format;
+    }
 
 }
