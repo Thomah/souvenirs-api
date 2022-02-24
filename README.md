@@ -37,9 +37,12 @@ The app + Docker image :
 
 ### Run with Docker
 
+            - name: FR_THOMAH_SOUVENIRS_API_URL
+              value: http://api.souvenirs.localhost
 ```bash
 docker run -d --name souvenirs-api \
   -p 8080:8080 \
+  -e FR_THOMAH_SOUVENIRS_API_URL=<YOUR_SOUVENIR_API_URL> \
   -e SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver \
   -e SPRING_DATASOURCE_URL=<YOUR_DB_JDBC_URL> \
   -e SPRING_DATASOURCE_USERNAME=<YOUR_DB_USERNAME> \
