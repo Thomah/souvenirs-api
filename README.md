@@ -37,8 +37,6 @@ The app + Docker image :
 
 ### Run with Docker
 
-            - name: FR_THOMAH_SOUVENIRS_API_URL
-              value: http://api.souvenirs.localhost
 ```bash
 docker run -d --name souvenirs-api \
   -p 8080:8080 \
