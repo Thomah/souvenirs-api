@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'fr.thomah.souvenirs'
-version = '1.2.2'
+version = '1.2.3'
 sourceCompatibility = '17'
 
 configurations {
@@ -21,6 +21,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'commons-io:commons-io:2.11.0'
 	compileOnly 'org.projectlombok:lombok'
