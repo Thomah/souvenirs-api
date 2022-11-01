@@ -23,12 +23,12 @@ public class FileController {
         return fileService.readOnFilesystem(request);
     }
 
-    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/files")
     public List<FileEntity> list() {
         return fileService.list();
     }
 
-    @RequestMapping(value = "/files", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/files")
     public FileEntity uploadImage(
             @RequestParam(value = "directory", required = false) String directory,
             @RequestParam(name = "name", required = false) String name,
@@ -54,7 +54,7 @@ public class FileController {
         return entity;
     }
 
-    @RequestMapping(value = "/files/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/files/{id}")
     public Boolean delete(@PathVariable("id") String id) {
         return fileService.delete(id);
     }
