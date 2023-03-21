@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'fr.thomah.souvenirs'
-version = '1.3.0'
+version = '1.3.1'
 sourceCompatibility = '17'
 
 configurations {
