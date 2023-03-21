@@ -1,15 +1,15 @@
 package fr.thomah.souvenirs.api;
 
-import com.sun.istack.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 @Getter(AccessLevel.PUBLIC)
@@ -37,6 +37,8 @@ public class FileEntity {
 
     @NotNull
     protected String url = "";
+
+    protected String comment = "";
 
     public String getFullname() {
         return name + "." + format;

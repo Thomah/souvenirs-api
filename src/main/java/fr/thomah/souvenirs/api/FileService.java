@@ -10,7 +10,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import org.apache.commons.io.IOUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -79,13 +79,14 @@ public class FileService {
 
         // Create entity to return
         FileEntity entity = new FileEntity();
-        entity.setDirectory(directory);
         entity.setName(name);
         entity.setFormat(format);
 
         if(directory != null) {
+            entity.setDirectory(directory);
             entity.setUrl(coreUrl + "/files/" + directory + "/" + finalFileName);
         } else {
+            entity.setDirectory("");
             entity.setUrl(coreUrl + "/files/" + finalFileName);
         }
 
